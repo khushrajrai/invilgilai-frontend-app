@@ -19,8 +19,10 @@ InvigilAI is an AI-powered online examination monitoring system designed to ensu
 ```bash
 npm install
 npm run dev
+```
 
 ## Backend Dir Tree
+```bash
 Backend/
 ├── docker-compose.yml
 ├── .gitignore
