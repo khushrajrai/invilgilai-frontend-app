@@ -1,39 +1,15 @@
 import { Link } from "react-router-dom";
 function Navbar() {
     return (
-        <nav className="w-full flex items-center bg-black justify-between px-12 py-3">
+        <nav className="w-full flex items-center bg-black justify-between px-14 py-3">
             <h1 className="text-5xl font-medium  text-[#5B6CFF] tracking-wide" style={{ fontFamily: "'Expletus Sans', sans-serif" }}>
                 Invigil<span className="font-medium">AI</span>
             </h1>
-            <Link to="/start-camera-detection">
-                <div className="w-11 h-11 ml-240 rounded-full bg-pink-200 flex items-center justify-center">
-                    <svg
-                        className="w-8 h-8 text-purple-800"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M3 7h3l2-3h8l2 3h3a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z"
-                        />
-                        <circle
-                            cx="12"
-                            cy="13"
-                            r="4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-
-                </div>
-            </Link>
+            
             <Link to="/login">
-                <div className="w-11 h-11 rounded-full bg-pink-200 flex items-center justify-center">
+                <div className="w-11 h-11 rounded-full bg-gray-300  flex items-center justify-center">
                     <svg
-                        className="w-8 h-8 text-purple-800"
+                        className="w-8 h-8 text-black "
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"

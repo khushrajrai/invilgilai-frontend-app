@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 function StartCameraDetection() {
     const videoRef = useRef(null);
+    const streamRef = useRef(null);
+
+
     const [cameraOn, setCameraOn] = useState(false);
     const navigate = useNavigate();
 
@@ -11,12 +14,23 @@ function StartCameraDetection() {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: true,
             });
+            streamRef.current = stream;
             videoRef.current.srcObject = stream;
             setCameraOn(true);
         } catch (err) {
             alert("Camera permission denied");
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach(track => track.stop());
+                streamRef.current = null;
+            }
+        };
+    }, []);
+
 
     return (
         <div className="min-h-screen bg-gray-950 text-white flex">

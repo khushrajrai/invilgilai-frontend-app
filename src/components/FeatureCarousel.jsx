@@ -13,7 +13,7 @@ function FeatureCarousel() {
                     {[...images, ...images].map((src, i) => (
                         <div
                             key={i}
-                            className="mx-5 w-96 h-60 rounded-2xl bg-white shadow-lg overflow-hidden
+                            className="mx-5 w-96 h-60 rounded-2xl bg-white ring-4 ring-blue-700 shadow-lg overflow-hidden
                         transition-transform duration-500 hover:scale-105"
                         >
                             <img
