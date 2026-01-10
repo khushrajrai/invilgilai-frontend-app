@@ -1,6 +1,7 @@
 import collections
 from ultralytics import YOLO
 
+
 model_path = "weights/best.pt"
 
 class VisionProcessor:

@@ -1,3 +1,14 @@
+# #-----------------------------------------------------
+# import os
+# from pathlib import Path
+
+# # identity_service/identity_module.py
+# BASE_DIR = Path(__file__).resolve().parent  # identity_service/
+
+# # Go up to Backend/, then into vision_service/weights/best.pt
+# model_path = BASE_DIR.parent / "vision_service" / "weights" / "best.pt"
+# #-----------------------------------------------------
+
 import torch
 import cv2 as cv
 import numpy as np
@@ -16,7 +27,8 @@ class IdentityProcessor:
         # Load FaceNet once
         self.facenet = InceptionResnetV1(pretrained="vggface2").eval().to(self.device)
         # Load YOLO Face detector
-        self.detector = YOLO("./weights/best.pt") # will be replaced with face-specific YOLO for better results
+        self.detector = YOLO("weights/best.pt") # will be replaced with face-specific YOLO for better results
+        # self.detector = YOLO(model_path)
 
         # auto-resolve class IDs from model metadata
         names = self.detector.model.names

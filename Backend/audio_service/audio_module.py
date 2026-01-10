@@ -1,7 +1,7 @@
 import numpy as np
 import sounddevice as sd
-from collections import deque
 import queue
+from collections import deque
 from panns_inference import AudioTagging
 
 errors = deque(maxlen=500)
@@ -19,7 +19,7 @@ class AudioFeatureAggregator:
     def get_features(self):
         if len(self.is_talking_buf) < 1:
             return None
-        audio_talking_ratio_2s = np.mean(list(self.is_talking_buf)[-2:])
+        audio_talking_ratio_2s = np.mean(list(self.is_talking_buf)[-2:])    # Taking the last 2 secs out of the recorded 5 secs and taking thier mean value
         audio_talking_ratio_5s = np.mean(self.is_talking_buf)
         audio_conf_mean_2s = np.mean(list(self.voice_conf_buf)[-2:])
         return [
@@ -38,7 +38,7 @@ class AudioPipeline:
         self.threshold = 0.15
 
     def process_chunk(self, audio_chunk):
-        audio_tensor = audio_chunk[None, :]
+        audio_tensor = audio_chunk[None, :]     # This line adds a batch dimension, turning a single audio chunk into a batch of one so it can be passed into the model.
         clipwise_output, _ = self.model.inference(audio_tensor)
         probs = clipwise_output[0]
         
@@ -84,15 +84,15 @@ class AudioProcessor:
 
                       
 
-                    features = self.pipeline.process_chunk(chunk)
-                    self.aggregator.update(features)
-                    final_features = self.aggregator.get_features()
+                        features = self.pipeline.process_chunk(chunk)
+                        self.aggregator.update(features)
+                        final_features = self.aggregator.get_features()
 
-                    if final_features is not None:
-                                # update the global variable that downstream model can read
-                                self.audio_features = np.array(final_features, dtype=np.float32)
-                                # debug print for each 1-second chunk
-                                print("Chunk processed, audio_features =", self.audio_features)
+                        if final_features is not None:
+                            # update the global variable that downstream model can read
+                            self.audio_features = np.array(final_features, dtype=np.float32)
+                            # debug print for each 1-second chunk
+                            print("Chunk processed, audio_features =", self.audio_features)
 
                 except Exception as e:
                            errors.append({"part": "processing_chunk", "error": str(e)})

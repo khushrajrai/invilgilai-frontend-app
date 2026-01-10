@@ -5,46 +5,78 @@ from fastapi import FastAPI, UploadFile, File, Form
 from identity_module import IdentityProcessor
 from enrollment_utils import EnrollmentManager
 from enrollment_utils import DATA_DIR
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Global variable to hold the processor (reloaded after enrollment)
 identity_p = IdentityProcessor()
 
-# @app.post("/enroll")
-# async def enroll_student(student_name: str = Form(...)):
-#     """Triggers the enrollment and training pipeline."""
-#     manager = EnrollmentManager()
-#     # Note: On a server, capture_and_save would usually happen via 
-#     # frontend sending frames. For now, this calls your existing sync logic.
-#     manager.sync_and_train()
-    
-#     # Reload the processor to use the new SVM weights
-#     global identity_p
-#     identity_p = IdentityProcessor()
-#     return {"status": "success", "message": f"Model trained for {student_name}"}
 
+#---------------------------------------------------------------------------------
 @app.post("/enroll")
 async def enroll_student(student_name: str = Form(...), files: list[UploadFile] = File(...)):
     manager = EnrollmentManager()
     student_dir = os.path.join(manager.DATA_DIR, student_name)
     os.makedirs(student_dir, exist_ok=True)
 
+    # Count existing files to avoid overwriting during multiple requests
+    existing_count = len(os.listdir(student_dir))
+
     for idx, file in enumerate(files):
         contents = await file.read()
         nparr = np.frombuffer(contents, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         if frame is not None:
-            # Save frame as-is
-            cv2.imwrite(os.path.join(student_dir, f"{idx}.jpg"), frame)
+            # Save frame without training
+            file_path = os.path.join(student_dir, f"{existing_count + idx}.jpg")
+            cv2.imwrite(file_path, frame)
 
-    # After saving all frames, generate embeddings & train SVM
+    return {"status": "success", "message": f"Saved {len(files)} images for {student_name}"}
+
+@app.post("/train")
+async def train_model():
+    print("🚀 Training request received. Starting SVM sync_and_train...")
+    manager = EnrollmentManager()
+    
     manager.sync_and_train()
+    
     global identity_p
-    identity_p = IdentityProcessor()
-    trained_for = {"status": "success", "message": f"Model trained for {student_name}"}
-    print(trained_for)
-    return {"status": "success", "message": f"{student_name} enrolled with {len(files)} images"}
+    identity_p = IdentityProcessor() # Reload weights
+    
+    return {"status": "success", "message": "SVM Model updated and reloaded"}
+#---------------------------------------------------------------------------------
+
+
+# @app.post("/enroll")
+# async def enroll_student(student_name: str = Form(...), files: list[UploadFile] = File(...)):
+#     manager = EnrollmentManager()
+#     student_dir = os.path.join(manager.DATA_DIR, student_name)
+#     os.makedirs(student_dir, exist_ok=True)
+
+#     for idx, file in enumerate(files):
+#         contents = await file.read()
+#         nparr = np.frombuffer(contents, np.uint8)
+#         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+#         if frame is not None:
+#             # Save frame as-is
+#             cv2.imwrite(os.path.join(student_dir, f"{idx}.jpg"), frame)
+
+#     # After saving all frames, generate embeddings & train SVM
+#     manager.sync_and_train()
+#     global identity_p
+#     identity_p = IdentityProcessor()    # Reloaded
+#     trained_for = {"status": "success", "message": f"Model trained for {student_name}"}
+#     print(trained_for)      # DEBUG
+#     return {"status": "success", "message": f"{student_name} enrolled with {len(files)} images"}
 
 
 

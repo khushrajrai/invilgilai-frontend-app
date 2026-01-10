@@ -11,7 +11,7 @@ fusion_model = TemporalBehaviorFusionModel()
 
 # Service URLs (Internal Docker Network names)
 
-# URLs come from environment variables
+# URLs can also come from environment variables
 VISION_URL = os.getenv("VISION_URL", "http://vision:8001/process")
 IDENTITY_URL = os.getenv("IDENTITY_URL", "http://identity:8002/process")
 AUDIO_URL = os.getenv("AUDIO_URL", "http://audio:8003/get_features")
