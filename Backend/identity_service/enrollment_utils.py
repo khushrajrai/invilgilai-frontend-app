@@ -1,5 +1,4 @@
-# #-----------------------------------------------------
-# import os
+# #-------------------------Comment after Testing----------------------------
 # from pathlib import Path
 
 # # identity_service/identity_module.py
@@ -23,20 +22,11 @@
 # [Save SVM model, label encoder, embeddings to disk]
 
 
-# front end post
-# const formData = new FormData();
-# formData.append("student_name", name);
-# images.forEach(img => formData.append("files", imgBlob));
-
-# fetch("http://backend:8001/enroll", {
-#   method: "POST",
-#   body: formData
-# })
-
 
 
 import os
 import cv2 as cv
+from pathlib import Path
 import numpy as np
 import torch
 import pickle
@@ -51,14 +41,20 @@ SVM_MODEL_PATH = "data/svm_model_facenet.pkl"
 ENCODER_PATH = "data/label_encoder.pkl"
 EMBEDDINGS_PATH = "data/faces_embeddings_facenet.npz"
 
+# DATA_DIR = BASE_DIR/"data/students_faces"
+# SVM_MODEL_PATH = BASE_DIR/"data/svm_model_facenet.pkl"
+# ENCODER_PATH = BASE_DIR/"data/label_encoder.pkl"
+# EMBEDDINGS_PATH = BASE_DIR/"data/faces_embeddings_facenet.npz"
+
 class EnrollmentManager:
     def __init__(self):
         self.DATA_DIR = "data/students_faces"
+        # self.DATA_DIR = BASE_DIR/"data/students_faces"
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"Initializing Enrollment Manager on {self.device}...")
         
         # Load model
-        self.detector = YOLO("weights/best.pt") # will be replaced with face-specific YOLO for better results
+        self.detector = YOLO("/app/weights/best.pt") # will be replaced with face-specific YOLO for better results
         # self.detector = YOLO(model_path)
         self.facenet = InceptionResnetV1(pretrained="vggface2").eval().to(self.device)
 
@@ -78,7 +74,17 @@ class EnrollmentManager:
                 if img is None: continue
 
                 # Detect face
-                results = self.detector(img, verbose=False)
+                results = self.detector(img, verbose=False, save=False, save_txt=False,
+    save_conf=False, project=None)
+                
+                # 🔥 cleanup YOLO junk
+                runs_path = Path.cwd() / "runs"
+                if runs_path.exists():
+                    import shutil
+                    shutil.rmtree(runs_path)
+                    print("runs/ deleted")
+
+
                 if len(results[0].boxes) > 0:
                     box = results[0].boxes[0]
                     x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
@@ -112,7 +118,7 @@ class EnrollmentManager:
         svm_model.fit(X_all, Y_encoded)
 
         # Save everything
-        os.makedirs("data", exist_ok=True)
+        # os.makedirs(Path(__file__).resolve().parent/"data", exist_ok=True)  This line is not needed because data/ already exists
         pickle.dump(svm_model, open(SVM_MODEL_PATH, "wb"))
         pickle.dump(encoder, open(ENCODER_PATH, "wb"))
         np.savez(EMBEDDINGS_PATH, X=X_all, Y=Y_all)

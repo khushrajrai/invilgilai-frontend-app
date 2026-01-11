@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react"
 import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 const apiUrl = import.meta.env.VITE_API_URL_IDENTITY;
 
 function StartCameraDetection() {
@@ -13,7 +13,7 @@ function StartCameraDetection() {
   const [cameraOn, setCameraOn] = useState(false);
   const [count, setCount] = useState(0);
 
-  const totalImages = 10;
+  const totalImages = 15;
   const navigate = useNavigate();
 
   // START CAMERA
@@ -81,7 +81,7 @@ function StartCameraDetection() {
     // 2. Update the UI state immediately
     setCount(nextCount);
 
-    // ⏳ BACKEND WORK (background)
+    // ⏳ BACKEND
     canvas.toBlob(async (blob) => {
       const formData = new FormData();
       formData.append("student_name", user?.name);
@@ -107,11 +107,11 @@ function StartCameraDetection() {
         try {
           const trainRes = await fetch(`${apiUrl}/train`, { method: "POST" });
           if (trainRes.ok) {
-            alert("Enrollment and Training Complete!");
+            alert("Your Identity has been recorded!"); // Enrollment and Training Complete!
             navigate("/");
           }
         } catch (trainErr) {
-          alert("Training started! Check backend console for progress.");
+          alert("An Error Occured, Reload and retake photos"); // Training must've started, Check backend console for progress.
         }
       }
     }, "image/jpeg");
@@ -173,8 +173,10 @@ function StartCameraDetection() {
           Images: {count} / {totalImages}
         </p>
 
-        {count === 4 && <p className="text-yellow-400">➡ Turn LEFT</p>}
-        {count === 7 && <p className="text-yellow-400">➡ Turn RIGHT</p>}
+        {count === 0 && <p className="text-yellow-400">Face The Camera</p>}
+        {count === 5 && <p className="text-yellow-400">➡ Turn LEFT</p>}
+        {count === 10 && <p className="text-yellow-400">➡ Turn RIGHT</p>}
+        {count === 15 && <p className="text-yellow-400">Photos Taken</p>}
 
         <p className="mt-2 text-gray-300">Place your face inside the frame</p>
 
@@ -195,11 +197,11 @@ function StartCameraDetection() {
         </div>
 
         <ul className="p-6 space-y-6 font-medium text-lg">
-          <li>🔹 Press Spacebar after beep</li>
-          <li>🔹 Keep room well lit</li>
-          <li>🔹 4 photos facing forward</li>
-          <li>🔹 3 photos facing left</li>
-          <li>🔹 3 photos facing right</li>
+          <li>🔹 Press Spacebar to take photos</li>
+          <li>🔹 Keep the room well lit</li>
+          <li>🔹 5 photos facing forward</li>
+          <li>🔹 5 photos facing left</li>
+          <li>🔹 5 photos facing right</li>
         </ul>
       </div>
     </div>
@@ -207,4 +209,3 @@ function StartCameraDetection() {
 }
 
 export default StartCameraDetection;
-

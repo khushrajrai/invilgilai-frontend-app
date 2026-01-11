@@ -1,6 +1,6 @@
-# #-----------------------------------------------------
+# #-------------------------Comment after Testing----------------------------
 # import os
-# from pathlib import Path
+
 
 # # identity_service/identity_module.py
 # BASE_DIR = Path(__file__).resolve().parent  # identity_service/
@@ -16,10 +16,14 @@ import pickle
 from collections import Counter, deque
 from facenet_pytorch import InceptionResnetV1
 from ultralytics import YOLO
+from pathlib import Path
 
 # Path Definitions
+
 SVM_MODEL_PATH = "data/svm_model_facenet.pkl"
 ENCODER_PATH = "data/label_encoder.pkl"
+# SVM_MODEL_PATH = BASE_DIR/"data/svm_model_facenet.pkl"
+# ENCODER_PATH = BASE_DIR/"data/label_encoder.pkl"
 
 class IdentityProcessor:
     def __init__(self):
@@ -27,7 +31,7 @@ class IdentityProcessor:
         # Load FaceNet once
         self.facenet = InceptionResnetV1(pretrained="vggface2").eval().to(self.device)
         # Load YOLO Face detector
-        self.detector = YOLO("weights/best.pt") # will be replaced with face-specific YOLO for better results
+        self.detector = YOLO("/app/weights/best.pt") # will be replaced with face-specific YOLO for better results
         # self.detector = YOLO(model_path)
 
         # auto-resolve class IDs from model metadata
@@ -48,7 +52,15 @@ class IdentityProcessor:
 
     def process_frame(self, frame, return_visuals=False):
         # 1. Detect faces
-        results = self.detector(frame, verbose=False)
+        results = self.detector(frame, verbose=False, save=False, save_txt=False,
+    save_conf=False, project=None)
+        # 🔥 cleanup YOLO junk
+        runs_path = Path.cwd() / "runs"
+        if runs_path.exists():
+            import shutil
+            shutil.rmtree(runs_path)
+            print("runs/ deleted")
+
         current_id = "missing" # Default if no box is found
         debug_frame = frame.copy() if return_visuals else None
 
