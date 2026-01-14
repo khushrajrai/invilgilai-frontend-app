@@ -10,15 +10,23 @@ function Navbar() {
   return (
     <nav className="w-full flex items-center justify-between px-6 md:px-16 py-4 md:py-6 bg-black border-b border-white/5">
       {/* BRAND */}
-      <h1
-        className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-[0.10em] md:tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-600 select-none flex items-center"
-        style={{ fontFamily: "'Expletus Sans', sans-serif" }}
-      >
-        INVIGIL
-        <span className="ml-1 md:ml-2 tracking-normal font-black text-white">
-          AI
-        </span>
-      </h1>
+      <div className="flex items-center gap-4 select-none">
+        <img
+          src="/logo.png"
+          alt="Invigil AI Logo"
+          className="h-15 sm:h-17 md:h-21 w-auto"
+        />
+
+        <h1
+          className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-[0.10em] md:tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-blue-400 to-blue-600 flex items-center"
+          style={{ fontFamily: "'Expletus Sans', sans-serif" }}
+        >
+          INVIGIL
+          <span className="ml-1 md:ml-2 tracking-normal font-black text-white">
+            AI
+          </span>
+        </h1>
+      </div>
 
       {/* PROFILE / LOGIN */}
       <Link to={destination} aria-label={ariaLabel} className="shrink-0">

@@ -35,7 +35,7 @@ function Home() {
                   Take Demo Exam
                 </button>
               </Link>
-              <Link to="/start-camera-detection" className="w-full sm:w-auto">
+              <Link to="/Identity" className="w-full sm:w-auto">
                 <button className="w-full px-8 py-4 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-500 transition-all active:scale-95">
                   Update Identity
                 </button>
