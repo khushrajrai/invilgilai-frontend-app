@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import FeatureCarousel from "../components/FeatureCarousel";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
 
 function Home() {
   const { isAuthenticated } = useAuth0();
@@ -59,6 +60,7 @@ function Home() {
       <div className="mt-10 md:mt-0">
         <FeatureCarousel />
       </div>
+      <Footer />
     </div>
   );
 }

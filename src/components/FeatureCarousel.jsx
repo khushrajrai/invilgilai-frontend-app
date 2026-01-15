@@ -98,7 +98,7 @@ function FeatureCarousel() {
                 <img
                   src={src}
                   alt={`Feature ${i}`}
-                  className={`w-full h-full object-cover transition duration-700 ${
+                  className={`w-full h-full object-contain transition duration-700 ${
                     isActive ? "grayscale-0" : "grayscale"
                   }`}
                 />
@@ -110,11 +110,11 @@ function FeatureCarousel() {
                 >
                   <div className="absolute bottom-3 left-4 md:bottom-6 md:left-6">
                     <span className="block text-blue-500 text-[10px] md:text-xs font-mono tracking-[0.2em] md:tracking-[0.35em] uppercase">
-                      Active Shield
+                      Screenshots
                     </span>
-                    <p className="text-white font-bold tracking-widest uppercase text-sm md:text-lg">
+                    {/* <p className="text-white font-bold tracking-widest uppercase text-sm md:text-lg">
                       Module 0{displayId}
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               </motion.div>
