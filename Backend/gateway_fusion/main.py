@@ -3,11 +3,21 @@ import asyncio
 import cv2
 import numpy as np
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from fusion_module import TemporalBehaviorFusionModel, FusionFeatures
 import os  # env vars
 
 app = FastAPI()
 fusion_model = TemporalBehaviorFusionModel()
+
+# Allow your frontend to communicate with the backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, replace with your specific domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Service URLs (Internal Docker Network names)
 

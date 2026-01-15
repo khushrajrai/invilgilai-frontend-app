@@ -3,62 +3,64 @@ import FeatureCarousel from "../components/FeatureCarousel";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 
-function Landing() {
+function Home() {
   const { isAuthenticated } = useAuth0();
 
   return (
-    <div className="min-h-screen bg-black from-gray-100 to-gray-400">
+    <div className="min-h-screen bg-black text-white selection:bg-blue-500/30 overflow-x-hidden">
+      {/* Background Glow Effect - Adjusted size for mobile */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] md:h-[600px] bg-blue-600/10 blur-[80px] md:blur-[120px] rounded-full pointer-events-none" />
+
       <Navbar />
-      {/* HERO TEXT */}
-      <div className="px-12 mt-12">
-        <p className="text-xl md:text-2xl font-medium text-white max-w-3xl leading-snug">
-          Real-time AI that sees, hears, and flags cheating
-          <br />
-          before it even starts.
+
+      {/* HERO SECTION */}
+      <div className="relative max-w-6xl mx-auto px-6 md:px-8 pt-20 md:pt-32 pb-1 text-center md:text-left">
+        {/* Responsive Typography */}
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-[1.1] tracking-tight bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent">
+          Real-time AI proctoring <br className="hidden md:block" />
+          <span className="text-blue-500">that shuts down cheating.</span>
+        </h1>
+
+        <p className="mt-6 md:mt-8 text-base md:text-xl text-gray-400 max-w-2xl mx-auto md:mx-0 leading-relaxed">
+          The ironclad defense for academic integrity. AI that detects,
+          analyzes, and logs suspicious behavior with zero latency.
         </p>
+
+        {/* Responsive CTA Buttons */}
+        <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-4 md:gap-5 justify-center md:justify-start">
+          {isAuthenticated ? (
+            <>
+              <Link to="/Exam" className="w-full sm:w-auto">
+                <button className="w-full px-8 py-4 rounded-xl bg-white text-black font-bold hover:bg-gray-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                  Take Demo Exam
+                </button>
+              </Link>
+              <Link to="/Identity" className="w-full sm:w-auto">
+                <button className="w-full px-8 py-4 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-500 transition-all active:scale-95">
+                  Update Identity
+                </button>
+              </Link>
+            </>
+          ) : (
+            <Link to="/login" className="w-full sm:w-auto">
+              <button className="group relative w-full px-8 md:px-10 py-4 rounded-xl bg-zinc-900 border border-blue-500/40 text-white font-semibold text-base md:text-lg transition-all duration-300 hover:border-blue-500 hover:bg-zinc-800 active:scale-[0.98]">
+                <span className="flex items-center justify-center gap-3">
+                  Register Identity
+                  <span className="text-blue-500 transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
+              </button>
+            </Link>
+          )}
+        </div>
       </div>
-      {/* FEATURE CARDS
-            <div className="flex justify-between px-12 mt-24 gap-10">
-                {[1, 2, 3].map((_, i) => (
-                    <div
-                        key={i}
-                        className="w-full h-60 rounded-2xl bg-white shadow-lg"
-                    />
-                ))}
-            </div> */}
-      {/* FEATURE CARDS */}
-      <div className="px-0 mt-20">
+
+      <div className="mt-10 md:mt-0">
         <FeatureCarousel />
       </div>
-      {isAuthenticated ? (
-        <Link to="/start-camera-detection">
-          <div className="w-18 h-18 ml-320 rounded-full bg-white flex items-center justify-center hover:scale-105 transition">
-            <svg
-              className="w-11 h-11 text-blue-900"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 7h3l2-3h8l2 3h3a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z"
-              />
-              <circle cx="12" cy="13" r="4" />
-            </svg>
-          </div>
-        </Link>
-      ) : (
-        <Link to="/login">
-          <button className="ml-298 px-6 py-3 rounded-full bg-blue-500 text-white font-medium hover:bg-blue-600 transition">
-            Login to Start{" "}
-            <span className="font-extrabold font-stretch-75% ">➔</span>
-          </button>
-        </Link>
-      )}
     </div>
   );
 }
 
-export default Landing;
+export default Home;
