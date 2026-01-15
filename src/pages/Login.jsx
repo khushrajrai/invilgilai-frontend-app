@@ -7,11 +7,8 @@ function Login() {
   if (isLoading) return null;
 
   return (
-    /* Added px-4 to ensure the card doesn't touch screen edges on small devices */
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black px-4">
-      {/* Added max-w-[95%] and adjusted padding for mobile-first responsiveness */}
       <div className="w-full max-w-md rounded-2xl bg-gray-900 border border-gray-800 shadow-xl p-6 sm:p-8">
-        {/* Logo - Text size scales slightly for small screens */}
         <h1
           className="text-2xl sm:text-3xl font-semibold text-center text-[#5B6CFF]"
           style={{ fontFamily: "'Expletus Sans', sans-serif" }}

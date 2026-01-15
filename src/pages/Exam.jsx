@@ -61,7 +61,7 @@ const QUESTIONS = [
   },
 ];
 
-export default function DemoExam() {
+export default function Exam() {
   const videoRef = useRef(null);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const [stream, setStream] = useState(null);
